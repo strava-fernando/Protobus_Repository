@@ -1,0 +1,93 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- 📌 Your artifact identity -->
+    <groupId>com.yourorg.proto</groupId>
+    <artifactId>proto-java</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>Proto Java Definitions</name>
+    <description>Generated Java classes from protobuf definitions</description>
+
+    <!-- 🔧 Versions -->
+    <properties>
+        <java.version>17</java.version>
+        <protobuf.version>3.25.0</protobuf.version>
+        <protobuf.plugin.version>0.6.1</protobuf.plugin.version>
+    </properties>
+
+    <!-- 📦 Runtime dependency -->
+    <dependencies>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>${protobuf.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <extensions>
+            <!-- Detect OS for protoc binary -->
+            <extension>
+                <groupId>kr.motd.maven</groupId>
+                <artifactId>os-maven-plugin</artifactId>
+                <version>1.7.0</version>
+            </extension>
+        </extensions>
+
+        <plugins>
+
+            <!-- 🔹 Compile Java -->
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+
+            <!-- 🔹 Generate Java from .proto -->
+            <plugin>
+                <groupId>org.xolstice.maven.plugins</groupId>
+                <artifactId>protobuf-maven-plugin</artifactId>
+                <version>${protobuf.plugin.version}</version>
+
+                <configuration>
+                    <!-- Path to your proto files -->
+                    <protoSourceRoot>${project.basedir}/src/main/proto</protoSourceRoot>
+
+                    <!-- Protoc compiler -->
+                    <protocArtifact>
+                        com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}
+                    </protocArtifact>
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <id>compile-protobuf</id>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <!-- 🚀 For publishing (GitHub Packages example) -->
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/strava-fernando/Protobus_Repository</url>
+        </repository>
+    </distributionManagement>
+
+</project>
